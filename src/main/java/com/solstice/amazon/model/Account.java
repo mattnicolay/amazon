@@ -5,6 +5,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
 
 @Entity
@@ -16,6 +17,7 @@ public class Account {
   private String lastName;
   private String email;
   @OneToMany
+  @JoinColumn(name = "accountId")
   private List<Address> addresses;
 
   public Account() {

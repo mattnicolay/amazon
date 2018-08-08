@@ -5,6 +5,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -15,10 +16,13 @@ public class Shipment {
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private long id;
   @OneToOne
+  @JoinColumn(name = "accountId")
   private Account account;
   @OneToOne
+  @JoinColumn(name = "shippingAddressId")
   private Address shippingAddress;
   @OneToOne
+  @JoinColumn(name = "orderLineItemId")
   private OrderLineItem orderLineItem;
   @Temporal(TemporalType.TIMESTAMP)
   private Date shippedDate;
