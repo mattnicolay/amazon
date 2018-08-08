@@ -5,6 +5,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 
 @Entity
@@ -18,7 +19,7 @@ public class OrderLineItem {
   private int quantity;
   private double price;
   private double totalPrice;
-  @OneToOne
+  @ManyToOne
   @JoinColumn(name = "shipmentId")
   private Shipment shipment;
 
