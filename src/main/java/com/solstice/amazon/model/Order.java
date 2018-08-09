@@ -1,5 +1,7 @@
 package com.solstice.amazon.model;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import java.util.Date;
 import java.util.List;
 import javax.persistence.CascadeType;
@@ -15,6 +17,7 @@ import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
+@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "orderNumber")
 @Entity
 @Table(name="orders")
 public class Order {
@@ -84,6 +87,10 @@ public class Order {
 
   public void setOrderLineItems(List<OrderLineItem> orderLineItems) {
     this.orderLineItems = orderLineItems;
+  }
+
+  public void addOrderLineItems(OrderLineItem orderLineItem) {
+    orderLineItems.add(orderLineItem);
   }
 
   public double getTotalPrice() {

@@ -1,11 +1,13 @@
 package com.solstice.amazon.model;
 
 import java.util.Date;
+import java.util.List;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -21,9 +23,9 @@ public class Shipment {
   @OneToOne
   @JoinColumn(name = "shippingAddressId")
   private Address shippingAddress;
-  @OneToOne
-  @JoinColumn(name = "orderLineItemId")
-  private OrderLineItem orderLineItem;
+  @OneToMany
+  @JoinColumn(name = "shipmentId")
+  private List<OrderLineItem> orderLineItems;
   @Temporal(TemporalType.TIMESTAMP)
   private Date shippedDate;
   @Temporal(TemporalType.TIMESTAMP)
@@ -32,12 +34,16 @@ public class Shipment {
   public Shipment(){}
 
   public Shipment(Account account, Address shippingAddress,
-      OrderLineItem orderLineItem, Date shippedDate, Date deliveryDate) {
+      List<OrderLineItem> orderLineItems, Date shippedDate, Date deliveryDate) {
     this.account = account;
     this.shippingAddress = shippingAddress;
-    this.orderLineItem = orderLineItem;
+    this.orderLineItems = orderLineItems;
     this.shippedDate = shippedDate;
     this.deliveryDate = deliveryDate;
+  }
+
+  public void addOrderLineItem(OrderLineItem orderLineItem) {
+    orderLineItems.add(orderLineItem);
   }
 
   public long getId() {
@@ -64,12 +70,12 @@ public class Shipment {
     this.shippingAddress = shippingAddress;
   }
 
-  public OrderLineItem getOrderLineItem() {
-    return orderLineItem;
+  public List<OrderLineItem> getOrderLineItems() {
+    return orderLineItems;
   }
 
-  public void setOrderLineItem(OrderLineItem orderLineItem) {
-    this.orderLineItem = orderLineItem;
+  public void setOrderLineItems(List<OrderLineItem> orderLineItems) {
+    this.orderLineItems = orderLineItems;
   }
 
   public Date getShippedDate() {
