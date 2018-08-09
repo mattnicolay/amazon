@@ -1,10 +1,15 @@
 package com.solstice.amazon.model;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 
+@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
 @Entity
 public class Address {
 
@@ -17,19 +22,23 @@ public class Address {
   private String state;
   private String zip;
   private String country;
+  @ManyToOne
+  @JoinColumn(name = "accountId")
+  private Account account;
 
   public Address(){
 
   }
 
   public Address(String street, String apartment, String city, String state, String zip,
-      String country) {
+      String country, Account account) {
     this.street = street;
     this.apartment = apartment;
     this.city = city;
     this.state = state;
     this.zip = zip;
     this.country = country;
+    this.account = account;
   }
 
   public long getId() {
@@ -86,5 +95,13 @@ public class Address {
 
   public void setCountry(String country) {
     this.country = country;
+  }
+
+  public Account getAccount() {
+    return account;
+  }
+
+  public void setAccount(Account account) {
+    this.account = account;
   }
 }

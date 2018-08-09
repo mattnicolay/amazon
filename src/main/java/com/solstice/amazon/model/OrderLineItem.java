@@ -17,7 +17,6 @@ import org.hibernate.annotations.Formula;
 public class OrderLineItem {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
-  @JsonProperty("id")
   private long id;
   @OneToOne
   @JoinColumn(name = "productId")
