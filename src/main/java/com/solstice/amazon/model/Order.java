@@ -6,6 +6,7 @@ import java.util.Date;
 import java.util.List;
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -18,6 +19,7 @@ import javax.persistence.PreUpdate;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.persistence.Transient;
 
 @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "orderNumber")
 @Entity
@@ -32,11 +34,13 @@ public class Order {
   private Account account;
   @Temporal(TemporalType.TIMESTAMP)
   private Date orderDate;
-  @OneToOne
+  @ManyToOne
   @JoinColumn(name = "shippingAddressId")
   private Address shippingAddress;
-  @OneToMany(cascade = CascadeType.ALL)
+  @OneToMany
+  @JoinColumn(name = "orderId")
   private List<OrderLineItem> orderLineItems;
+  @Transient
   private double totalPrice;
 
   public Order(){}
@@ -64,7 +68,7 @@ public class Order {
 
   public void setAccount(Account account) {
     this.account = account;
-    this.account.addOrder(this);
+//    this.account.addOrder(this);
   }
 
   public Date getOrderDate() {
@@ -94,6 +98,11 @@ public class Order {
 
   public void addOrderLineItem(OrderLineItem orderLineItem) {
     orderLineItems.add(orderLineItem);
+    setTotalPrice();
+  }
+
+  public void removeOrderLineItem(OrderLineItem orderLineItem) {
+    orderLineItems.remove(orderLineItem);
     setTotalPrice();
   }
 

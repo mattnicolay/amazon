@@ -2,14 +2,13 @@ package com.solstice.amazon.model;
 
 import java.util.Date;
 import java.util.List;
-import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
-import javax.persistence.OneToOne;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
@@ -18,13 +17,14 @@ public class Shipment {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private long id;
-  @OneToOne
+  @ManyToOne
   @JoinColumn(name = "accountId")
   private Account account;
-  @OneToOne
+  @ManyToOne
   @JoinColumn(name = "shippingAddressId")
   private Address shippingAddress;
-  @OneToMany(cascade = CascadeType.ALL)
+  @OneToMany
+  @JoinColumn(name = "shipmentId")
   private List<OrderLineItem> orderLineItems;
   @Temporal(TemporalType.TIMESTAMP)
   private Date shippedDate;
@@ -44,6 +44,10 @@ public class Shipment {
 
   public void addOrderLineItem(OrderLineItem orderLineItem) {
     orderLineItems.add(orderLineItem);
+  }
+
+  public void removeOrderLineItem(OrderLineItem orderLineItem) {
+    orderLineItems.remove(orderLineItem);
   }
 
   public long getId() {

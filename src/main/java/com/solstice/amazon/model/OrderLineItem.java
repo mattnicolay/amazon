@@ -8,9 +8,9 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-import javax.persistence.OneToOne;
 import javax.persistence.PrePersist;
 import javax.persistence.PreUpdate;
+import javax.persistence.Transient;
 
 @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
 @Entity
@@ -18,11 +18,12 @@ public class OrderLineItem {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private long id;
-  @OneToOne
+  @ManyToOne
   @JoinColumn(name = "productId")
   private Product product;
   private int quantity;
   private double price;
+  @Transient
   private double totalPrice;
   @ManyToOne
   @JoinColumn(name = "shipmentId")
@@ -37,10 +38,10 @@ public class OrderLineItem {
       Shipment shipment, Order order) {
     this.product = product;
     this.quantity = quantity;
-    this.price = price;
-    setTotalPrice();
     this.shipment = shipment;
     this.order = order;
+    setPrice();
+    setTotalPrice();
   }
 
   public long getId() {
@@ -57,6 +58,7 @@ public class OrderLineItem {
 
   public void setProduct(Product product) {
     this.product = product;
+    setPrice();
   }
 
   public int getQuantity() {
@@ -72,8 +74,8 @@ public class OrderLineItem {
     return price;
   }
 
-  public void setPrice(double price) {
-    this.price = price;
+  public void setPrice() {
+    price = product.getPrice();
     setTotalPrice();
   }
 
@@ -103,5 +105,19 @@ public class OrderLineItem {
   public void setOrder(Order order) {
     this.order = order;
     this.order.addOrderLineItem(this);
+  }
+
+  public void removeFromParents() {
+    shipment.removeOrderLineItem(this);
+    order.removeOrderLineItem(this);
+  }
+
+  public boolean equals(Object o) {
+    if (!(o instanceof OrderLineItem)) {
+      return false;
+    }
+
+    OrderLineItem orderLineItem = (OrderLineItem) o;
+    return orderLineItem.getId() == id;
   }
 }

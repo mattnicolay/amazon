@@ -2,12 +2,14 @@ package com.solstice.amazon.model;
 
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+import java.util.List;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 
 @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
 @Entity
@@ -25,6 +27,12 @@ public class Address {
   @ManyToOne
   @JoinColumn(name = "accountId")
   private Account account;
+  @OneToMany
+  @JoinColumn(name = "shippingAddressId")
+  private List<Order> orders;
+  @OneToMany
+  @JoinColumn(name = "shippingAddressId")
+  private List<Shipment> shipments;
 
   public Address(){
 
@@ -104,5 +112,21 @@ public class Address {
   public void setAccount(Account account) {
     this.account = account;
     this.account.addAddress(this);
+  }
+
+  public List<Order> getOrders() {
+    return orders;
+  }
+
+  public void setOrders(List<Order> orders) {
+    this.orders = orders;
+  }
+
+  public List<Shipment> getShipments() {
+    return shipments;
+  }
+
+  public void setShipments(List<Shipment> shipments) {
+    this.shipments = shipments;
   }
 }

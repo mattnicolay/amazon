@@ -2,6 +2,7 @@ package com.solstice.amazon.model;
 
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
@@ -21,9 +22,14 @@ public class Account {
   private String lastName;
   private String email;
   @OneToMany(cascade = CascadeType.ALL)
+  @JoinColumn(name = "accountId")
   private List<Address> addresses;
   @OneToMany(cascade = CascadeType.ALL)
+  @JoinColumn(name = "accountId")
   private List<Order> orders;
+  @OneToMany(cascade = CascadeType.ALL)
+  @JoinColumn(name = "accountId")
+  private List<Shipment> shipments;
 
   public Account() {
   }
@@ -74,7 +80,8 @@ public class Account {
   }
 
   public void setAddresses(List<Address> addresses) {
-    this.addresses = addresses;
+    this.addresses = new ArrayList<>();
+    addresses.forEach(address -> address.setAccount(this));
   }
 
   public void addAddress(Address address) {
@@ -91,5 +98,13 @@ public class Account {
 
   public void addOrder(Order order) {
     orders.add(order);
+  }
+
+  public List<Shipment> getShipments() {
+    return shipments;
+  }
+
+  public void setShipments(List<Shipment> shipments) {
+    this.shipments = shipments;
   }
 }

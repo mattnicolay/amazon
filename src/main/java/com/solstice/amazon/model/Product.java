@@ -1,9 +1,14 @@
 package com.solstice.amazon.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import java.util.List;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToMany;
+import javax.persistence.Transient;
 
 @Entity
 public class Product {
@@ -14,6 +19,11 @@ public class Product {
   private String description;
   private String image;
   private double price;
+  @OneToMany
+  @JoinColumn(name = "productId")
+  @Transient
+  @JsonIgnore
+  private List<OrderLineItem> orderLineItems;
 
   public Product(){}
 
@@ -62,5 +72,13 @@ public class Product {
 
   public void setPrice(double price) {
     this.price = price;
+  }
+
+  public List<OrderLineItem> getOrderLineItems() {
+    return orderLineItems;
+  }
+
+  public void setOrderLineItems(List<OrderLineItem> orderLineItems) {
+    this.orderLineItems = orderLineItems;
   }
 }
