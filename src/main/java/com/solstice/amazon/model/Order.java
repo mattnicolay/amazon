@@ -16,6 +16,7 @@ import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import org.hibernate.annotations.Formula;
 
 @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "orderNumber")
 @Entity
@@ -36,6 +37,10 @@ public class Order {
   @OneToMany(cascade = CascadeType.ALL)
   @JoinColumn(name = "orderId")
   private List<OrderLineItem> orderLineItems;
+//  @Formula("("
+//      + "select sum(ol.totalPrice) from OrderLineItem ol "
+//      + "where ol.order.orderNumber = orderNumber"
+//      + ")")
   private double totalPrice;
 
   public Order(){}

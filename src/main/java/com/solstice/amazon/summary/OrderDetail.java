@@ -1,5 +1,8 @@
-package com.solstice.amazon.model;
+package com.solstice.amazon.summary;
 
+import com.solstice.amazon.model.Address;
+import com.solstice.amazon.model.OrderLineItem;
+import com.solstice.amazon.model.Shipment;
 import java.util.List;
 
 public class OrderDetail {

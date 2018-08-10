@@ -1,7 +1,6 @@
 package com.solstice.amazon.model;
 
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
-import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -86,7 +85,6 @@ public class OrderLineItem {
 
   public void setShipment(Shipment shipment) {
     this.shipment = shipment;
-    this.shipment.addOrderLineItem(this);
   }
 
   public void setTotalPrice(double totalPrice) {

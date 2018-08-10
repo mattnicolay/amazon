@@ -42,9 +42,9 @@ public class Shipment {
     this.deliveryDate = deliveryDate;
   }
 
-  public void addOrderLineItem(OrderLineItem orderLineItem) {
-    orderLineItems.add(orderLineItem);
-  }
+//  public void addOrderLineItem(OrderLineItem orderLineItem) {
+//    orderLineItems.add(orderLineItem);
+//  }
 
   public long getId() {
     return id;
