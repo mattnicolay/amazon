@@ -9,7 +9,8 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
-import org.hibernate.annotations.Formula;
+import javax.persistence.PrePersist;
+import javax.persistence.PreUpdate;
 
 @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
 @Entity
@@ -22,7 +23,6 @@ public class OrderLineItem {
   private Product product;
   private int quantity;
   private double price;
-  @Formula("price*quantity")
   private double totalPrice;
   @ManyToOne
   @JoinColumn(name = "shipmentId")
@@ -33,12 +33,12 @@ public class OrderLineItem {
 
   public OrderLineItem(){}
 
-  public OrderLineItem(Product product, int quantity, double price, double totalPrice,
+  public OrderLineItem(Product product, int quantity, double price,
       Shipment shipment, Order order) {
     this.product = product;
     this.quantity = quantity;
     this.price = price;
-    this.totalPrice = totalPrice;
+    setTotalPrice();
     this.shipment = shipment;
     this.order = order;
   }
@@ -65,6 +65,7 @@ public class OrderLineItem {
 
   public void setQuantity(int quantity) {
     this.quantity = quantity;
+    setTotalPrice();
   }
 
   public double getPrice() {
@@ -73,6 +74,7 @@ public class OrderLineItem {
 
   public void setPrice(double price) {
     this.price = price;
+    setTotalPrice();
   }
 
   public double getTotalPrice() {
@@ -85,10 +87,13 @@ public class OrderLineItem {
 
   public void setShipment(Shipment shipment) {
     this.shipment = shipment;
+    this.shipment.addOrderLineItem(this);
   }
 
-  public void setTotalPrice(double totalPrice) {
-    this.totalPrice = totalPrice;
+  @PreUpdate
+  @PrePersist
+  public void setTotalPrice() {
+    totalPrice = price*quantity;
   }
 
   public Order getOrder() {
@@ -97,5 +102,6 @@ public class OrderLineItem {
 
   public void setOrder(Order order) {
     this.order = order;
+    this.order.addOrderLineItem(this);
   }
 }

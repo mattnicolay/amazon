@@ -103,5 +103,6 @@ public class Address {
 
   public void setAccount(Account account) {
     this.account = account;
+    this.account.addAddress(this);
   }
 }

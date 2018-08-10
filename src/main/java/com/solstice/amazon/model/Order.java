@@ -13,10 +13,11 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
+import javax.persistence.PrePersist;
+import javax.persistence.PreUpdate;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
-import org.hibernate.annotations.Formula;
 
 @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "orderNumber")
 @Entity
@@ -26,32 +27,27 @@ public class Order {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private long orderNumber;
-  @ManyToOne(cascade = CascadeType.ALL)
+  @ManyToOne
   @JoinColumn(name = "accountId")
   private Account account;
   @Temporal(TemporalType.TIMESTAMP)
   private Date orderDate;
-  @OneToOne(cascade = CascadeType.ALL)
+  @OneToOne
   @JoinColumn(name = "shippingAddressId")
   private Address shippingAddress;
   @OneToMany(cascade = CascadeType.ALL)
-  @JoinColumn(name = "orderId")
   private List<OrderLineItem> orderLineItems;
-//  @Formula("("
-//      + "select sum(ol.totalPrice) from OrderLineItem ol "
-//      + "where ol.order.orderNumber = orderNumber"
-//      + ")")
   private double totalPrice;
 
   public Order(){}
 
   public Order(Account account, Date orderDate, Address shippingAddress,
-      List<OrderLineItem> orderLineItems, double totalPrice) {
+      List<OrderLineItem> orderLineItems) {
     this.account = account;
     this.orderDate = orderDate;
     this.shippingAddress = shippingAddress;
     this.orderLineItems = orderLineItems;
-    this.totalPrice = totalPrice;
+    setTotalPrice();
   }
 
   public long getOrderNumber() {
@@ -68,6 +64,7 @@ public class Order {
 
   public void setAccount(Account account) {
     this.account = account;
+    this.account.addOrder(this);
   }
 
   public Date getOrderDate() {
@@ -92,17 +89,22 @@ public class Order {
 
   public void setOrderLineItems(List<OrderLineItem> orderLineItems) {
     this.orderLineItems = orderLineItems;
+    setTotalPrice();
   }
 
-  public void addOrderLineItems(OrderLineItem orderLineItem) {
+  public void addOrderLineItem(OrderLineItem orderLineItem) {
     orderLineItems.add(orderLineItem);
+    setTotalPrice();
   }
 
   public double getTotalPrice() {
     return totalPrice;
   }
 
-  public void setTotalPrice(double totalPrice) {
-    this.totalPrice = totalPrice;
+  @PreUpdate
+  @PrePersist
+  private void setTotalPrice() {
+    totalPrice = 0;
+    this.orderLineItems.forEach(o -> totalPrice += o.getTotalPrice());
   }
 }

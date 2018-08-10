@@ -2,6 +2,7 @@ package com.solstice.amazon.model;
 
 import java.util.Date;
 import java.util.List;
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -23,8 +24,7 @@ public class Shipment {
   @OneToOne
   @JoinColumn(name = "shippingAddressId")
   private Address shippingAddress;
-  @OneToMany
-  @JoinColumn(name = "shipmentId")
+  @OneToMany(cascade = CascadeType.ALL)
   private List<OrderLineItem> orderLineItems;
   @Temporal(TemporalType.TIMESTAMP)
   private Date shippedDate;
@@ -42,9 +42,9 @@ public class Shipment {
     this.deliveryDate = deliveryDate;
   }
 
-//  public void addOrderLineItem(OrderLineItem orderLineItem) {
-//    orderLineItems.add(orderLineItem);
-//  }
+  public void addOrderLineItem(OrderLineItem orderLineItem) {
+    orderLineItems.add(orderLineItem);
+  }
 
   public long getId() {
     return id;
