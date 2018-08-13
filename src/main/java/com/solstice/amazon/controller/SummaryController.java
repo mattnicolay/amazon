@@ -1,7 +1,7 @@
 package com.solstice.amazon.controller;
 
 
-import com.solstice.amazon.summary.OrderDetail;
+import com.solstice.amazon.summary.OrderSummary;
 import com.solstice.amazon.service.SummaryService;
 import com.solstice.amazon.summary.ShipmentSummary;
 import java.util.List;
@@ -20,12 +20,12 @@ public class SummaryController {
     this.summaryService = summaryService;
   }
 
-  @GetMapping("/orders/{accountId}")
-  public List<OrderDetail> getOrderDetails(@PathVariable(value = "accountId") long accountId) {
-    return summaryService.getOrderDetails(accountId);
+  @GetMapping("/ordersByAccount/{accountId}")
+  public List<OrderSummary> getOrderSummary(@PathVariable(value = "accountId") long accountId) {
+    return summaryService.getOrderSummary(accountId);
   }
 
-  @GetMapping("/shipments/{accountId}")
+  @GetMapping("/shipmentsByAccount/{accountId}")
   public List<ShipmentSummary> getShipments(@PathVariable("accountId") long accountId) {
     return summaryService.getShipmentSummary(accountId);
   }

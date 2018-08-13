@@ -8,8 +8,6 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-import javax.persistence.PrePersist;
-import javax.persistence.PreUpdate;
 import javax.persistence.Transient;
 
 @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
@@ -80,6 +78,7 @@ public class OrderLineItem {
   }
 
   public double getTotalPrice() {
+    setTotalPrice();
     return totalPrice;
   }
 
@@ -92,8 +91,6 @@ public class OrderLineItem {
     this.shipment.addOrderLineItem(this);
   }
 
-  @PreUpdate
-  @PrePersist
   public void setTotalPrice() {
     totalPrice = price*quantity;
   }
@@ -110,14 +107,5 @@ public class OrderLineItem {
   public void removeFromParents() {
     shipment.removeOrderLineItem(this);
     order.removeOrderLineItem(this);
-  }
-
-  public boolean equals(Object o) {
-    if (!(o instanceof OrderLineItem)) {
-      return false;
-    }
-
-    OrderLineItem orderLineItem = (OrderLineItem) o;
-    return orderLineItem.getId() == id;
   }
 }

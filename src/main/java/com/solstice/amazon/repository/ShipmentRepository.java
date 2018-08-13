@@ -19,4 +19,10 @@ public interface ShipmentRepository  extends CrudRepository<Shipment, Long> {
   long findOrderId(
       @Param(value = "accountId") long accountId,
       @Param(value = "shipmentId") long shipmentId);
+
+  @Query("select s"
+      + " from Shipment s join "
+      + "OrderLineItem o on o member of s.orderLineItems "
+      + "and o.order.orderNumber = :orderId")
+  List<Shipment> findAllByOrderId(@Param("orderId") long orderId);
 }
